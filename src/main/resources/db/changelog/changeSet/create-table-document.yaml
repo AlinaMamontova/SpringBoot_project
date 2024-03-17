@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-document
+      author: Alina Mamontova
+      changes:
+        - createTable:
+            tableName: document
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: date_start
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: issue_organization
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: issue_code
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: document_status
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: document_type_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: document_document_type_fk
+                    baseTableName: document
+                    baseColumnNames: document_type_id
+                    referencedTableName: document_type
+                    referencedColumnNames: id

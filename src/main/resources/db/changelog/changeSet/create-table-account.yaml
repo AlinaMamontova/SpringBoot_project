@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-account
+      author: Alina Mamontova
+      changes:
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: account_status
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: double precision
+                  constraints:
+                    nullable: false
+                    min: 0
+              - column:
+                  name: bank_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: account_bank_fk
+                    baseTableName: account
+                    baseColumnNames: bank_id
+                    referencedTableName: bank
+                    referencedColumnNames: id
+              - column:
+                  name: currency_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: account_currency_fk
+                    baseTableName: account
+                    baseColumnNames: currency_id
+                    referencedTableName: currency
+                    referencedColumnNames: id
+              - column:
+                  name: client_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: account_client_fk
+                    baseTableName: account
+                    baseColumnNames: client_id
+                    referencedTableName: client
+                    referencedColumnNames: id
+
+

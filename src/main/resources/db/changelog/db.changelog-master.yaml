@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeSet/create-table-bank.yaml
+  - include:
+      file: db/changelog/changeSet/create-table-account.yaml
+  - include:
+      file: db/changelog/changeSet/create-table-card.yaml
+  - include:
+      file: db/changelog/changeSet/create-table-card-type.yaml
+  - include:
+      file: db/changelog/changeSet/create-table-client.yaml
+  - include:
+      file: db/changelog/changeSet/create-table-currency.yaml
+  - include:
+      file: db/changelog/changeSet/create-table-document.yaml
+  - include:
+      file: db/changelog/changeSet/create-table-document-type.yaml
+  - include:
+      file: db/changelog/changeSet/create-table-client-documents.sql
+  - include:
+      file: db/changelog/changeSet/insert-into-account.sql
+  - include:
+      file: db/changelog/changeSet/insert-into-bank.sql
+  - include:
+      file: db/changelog/changeSet/insert-into-card.sql
+  - include:
+      file: db/changelog/changeSet/insert-into-card_type-document_type-currency.sql
+  - include:
+      file: db/changelog/changeSet/insert-into-client.sql
+  - include:
+      file: db/changelog/changeSet/insert-into-client_documents-document.sql
+  - include:
+      file: db/changelog/changeSet/alter-table-client-document.sql
+
+
+
+
+

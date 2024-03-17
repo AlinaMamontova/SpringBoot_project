@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - changeSet:
+        id: create-table-card
+        author: Alina Mamontova
+        changes:
+          - createTable:
+              tableName: card
+              columns:
+                - column:
+                    name: id
+                    type: serial
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: date_start
+                    type: date
+                    constraints:
+                      nullable: false
+                - column:
+                    name: date_end
+                    type: date
+                    constraints:
+                      nullable: false
+                - column:
+                    name: cvc
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: card_status
+                    type: boolean
+                    constraints:
+                      nullable: false
+                - column:
+                    name: balance
+                    type: double precision
+                    constraints:
+                      nullable: false
+                      min: 0
+                - column:
+                    name: client_id
+                    type: bigint
+                    constraints:
+                      nullable: false
+                      foreignKeyName: card_client_fk
+                      baseTableName: card
+                      baseColumnNames: client_id
+                      referencedTableName: client
+                      referencedColumnNames: id
+                - column:
+                    name: type_id
+                    type: bigint
+                    constraints:
+                      nullable: false
+                      foreignKeyName: card_type_fk
+                      baseTableName: card
+                      baseColumnNames: card_type_id
+                      referencedTableName: card_type
+                      referencedColumnNames: id
+                - column:
+                    name: account_id
+                    type: bigint
+                    constraints:
+                      nullable: false
+                      foreignKeyName: card_account_fk
+                      baseTableName: card
+                      baseColumnNames: account_id
+                      referencedTableName: account
+                      referencedColumnNames: id
