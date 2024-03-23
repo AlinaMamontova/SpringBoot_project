@@ -1,14 +1,18 @@
 package com.example.springboot_project.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.Date;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "client")
 public class Client {
@@ -24,16 +28,21 @@ public class Client {
     private String patronymic;
     @Column(name = "birthdate", nullable = false)
     private Date date;
-    @OneToMany(mappedBy = "client")
-    private List<Card> cards;
-    @OneToMany(mappedBy = "client")
-    private List<Account> accounts;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "client_document",
             joinColumns = @JoinColumn(name = "client_id"),
             inverseJoinColumns = @JoinColumn(name = "document_id")
     )
-    private List<Document> documents;
+    private List<Document> documents = new ArrayList<>();
 
+    public void addDocument(Document document) {
+        documents.add(document);
+        document.getClients().add(this);
+    }
+
+    public void removeDocument(Document document) {
+        documents.remove(document);
+        document.getClients().remove(this);
+    }
 }

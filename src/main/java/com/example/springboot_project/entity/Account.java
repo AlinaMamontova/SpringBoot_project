@@ -1,17 +1,19 @@
 package com.example.springboot_project.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "account")
-@ToString(exclude = {"bank", "currency", "client", "cards"})
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +32,5 @@ public class Account {
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
-    @OneToMany(mappedBy = "account")
-    private List<Card> cards;
+
 }

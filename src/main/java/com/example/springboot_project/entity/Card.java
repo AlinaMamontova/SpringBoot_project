@@ -1,13 +1,13 @@
 package com.example.springboot_project.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.LocalDate;
-
-@Data
+import java.sql.Date;
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "card")
 public class Card {
@@ -16,9 +16,9 @@ public class Card {
     @Column(name = "id")
     private int id;
     @Column(name = "date_start")
-    private LocalDate dateStart;
+    private Date dateStart;
     @Column(name = "date_end")
-    private LocalDate dateEnd;
+    private Date dateEnd;
     @Column(name = "cvc")
     private int cvc;
     @Column(name = "card_status")
@@ -30,7 +30,7 @@ public class Card {
     private Client client;
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
-    private CardType cardTypeId;
+    private CardType cardType;
     @ManyToOne
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;

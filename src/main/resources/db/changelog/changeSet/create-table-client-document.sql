@@ -1,5 +1,5 @@
 --changeSet Mamontova:1
-create table client_documents
+create table client_document
 (
     client_id   int not null,
     document_id int not null,

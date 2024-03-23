@@ -1,13 +1,17 @@
 package com.example.springboot_project.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "card_type")
 public class CardType {
@@ -17,6 +21,4 @@ public class CardType {
     private int id;
     @Column(name = "type_name", length = 255, nullable = false)
     private String typeName;
-    @OneToMany(mappedBy = "cardTypeId")
-    private List<Card> card;
 }

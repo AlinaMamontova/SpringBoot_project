@@ -1,14 +1,12 @@
 package com.example.springboot_project.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
-import java.util.List;
-
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "bank")
 public class Bank {
@@ -24,6 +22,4 @@ public class Bank {
     private String country;
     @Column(name = "city", length = 255, nullable = false)
     private String city;
-    @OneToMany(mappedBy = "bank")
-    private List<Account> accounts;
 }

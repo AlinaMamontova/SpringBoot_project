@@ -8,7 +8,8 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: serial
+                  type: int
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -25,7 +26,7 @@ databaseChangeLog:
                     min: 0
               - column:
                   name: bank_id
-                  type: bigint
+                  type: int
                   constraints:
                     nullable: false
                     foreignKeyName: account_bank_fk
@@ -35,7 +36,7 @@ databaseChangeLog:
                     referencedColumnNames: id
               - column:
                   name: currency_id
-                  type: bigint
+                  type: int
                   constraints:
                     nullable: false
                     foreignKeyName: account_currency_fk
@@ -45,7 +46,7 @@ databaseChangeLog:
                     referencedColumnNames: id
               - column:
                   name: client_id
-                  type: bigint
+                  type: int
                   constraints:
                     nullable: false
                     foreignKeyName: account_client_fk
