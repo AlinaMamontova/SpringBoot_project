@@ -1,50 +1,52 @@
 package com.example.springboot_project.service;
 
-import com.example.springboot_project.dao.AccountDAO;
+import com.example.springboot_project.dao.AccountRepository;
 import com.example.springboot_project.dto.AccountDTO;
 import com.example.springboot_project.entity.Account;
 import com.example.springboot_project.mapper.AccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-    private AccountDAO accountDAO;
+    private AccountRepository accountRepository;
     private AccountMapper accountMapper;
 
 
     @Autowired
-    public AccountServiceImpl(AccountDAO accountDAO, AccountMapper accountMapper) {
-        this.accountDAO = accountDAO;
+    public AccountServiceImpl(AccountRepository accountRepository, AccountMapper accountMapper) {
+        this.accountRepository = accountRepository;
         this.accountMapper = accountMapper;
     }
 
     @Override
-    @Transactional
     public List<AccountDTO> getAllAccounts() {
-        List<Account> allAccounts = accountDAO.getAllAccounts();
+        List<Account> allAccounts = accountRepository.findAll();
         List<AccountDTO> accountsDTOs = allAccounts.stream().map(accountMapper::toDTO).toList();
         return accountsDTOs;
     }
 
     @Override
-    @Transactional
     public void saveAccount(AccountDTO accountDTO) {
-        accountDAO.saveAccount(accountMapper.dtoToAccount(accountDTO));
+        accountRepository.save(accountMapper.dtoToAccount(accountDTO));
     }
 
     @Override
-    @Transactional
     public AccountDTO getAccount(int id) {
-        return accountMapper.toDTO(accountDAO.getAccount(id));
+        Account account = null;
+        Optional<Account> optionalAccount = accountRepository.findById(id);
+        if (optionalAccount.isPresent()) {
+            account = optionalAccount.get();
+        }
+        return accountMapper.toDTO(account);
     }
 
     @Override
-    @Transactional
     public void deleteAccount(int id) {
-        accountDAO.deleteAccount(id);
+        accountRepository.deleteById(id);
     }
+
 }

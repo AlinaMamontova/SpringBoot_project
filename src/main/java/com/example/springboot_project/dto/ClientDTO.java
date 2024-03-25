@@ -18,4 +18,5 @@ public class ClientDTO {
     private String lastName;
     private String patronymic;
     private Date date;
+    private List<DocumentDTO> documents;
 }

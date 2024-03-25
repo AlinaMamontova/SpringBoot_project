@@ -34,7 +34,7 @@ public class AccountController {
     }
 
     @PutMapping("/accounts")
-    public AccountDTO updateBank(@RequestBody AccountDTO accountDTO) {
+    public AccountDTO updateAccount(@RequestBody AccountDTO accountDTO) {
         accountService.saveAccount(accountDTO);
         return accountDTO;
     }

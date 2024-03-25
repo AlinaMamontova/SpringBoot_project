@@ -1,49 +1,50 @@
 package com.example.springboot_project.service;
 
-import com.example.springboot_project.dao.DocumentTypeDAO;
+import com.example.springboot_project.dao.DocumentTypeRepository;
 import com.example.springboot_project.dto.DocumentTypeDTO;
 import com.example.springboot_project.entity.DocumentType;
 import com.example.springboot_project.mapper.DocumentTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DocumentTypeServiceImpl implements DocumentTypeService {
-    private DocumentTypeDAO documentTypeDAO;
+    private DocumentTypeRepository documentTypeRepository;
     private DocumentTypeMapper documentTypeMapper;
 
     @Autowired
-    public DocumentTypeServiceImpl(DocumentTypeDAO documentTypeDAO, DocumentTypeMapper documentTypeMapper) {
-        this.documentTypeDAO = documentTypeDAO;
+    public DocumentTypeServiceImpl(DocumentTypeRepository documentTypeRepository, DocumentTypeMapper documentTypeMapper) {
+        this.documentTypeRepository = documentTypeRepository;
         this.documentTypeMapper = documentTypeMapper;
     }
 
     @Override
-    @Transactional
     public List<DocumentTypeDTO> getAllDocumentTypesDTO() {
-        List<DocumentType> allDocumentTypes = documentTypeDAO.getAllDocumentTypes();
+        List<DocumentType> allDocumentTypes = documentTypeRepository.findAll();
         List<DocumentTypeDTO> documentTypesDTOs = allDocumentTypes.stream().map(documentTypeMapper::toDTO).toList();
         return documentTypesDTOs;
     }
 
     @Override
-    @Transactional
     public void saveDocumentType(DocumentTypeDTO documentTypeDTO) {
-        documentTypeDAO.saveDocumentType(documentTypeMapper.dtoToDocumentType(documentTypeDTO));
+        documentTypeRepository.save(documentTypeMapper.dtoToDocumentType(documentTypeDTO));
     }
 
     @Override
-    @Transactional
     public DocumentTypeDTO getDocumentTypeDTO(int id) {
-        return documentTypeMapper.toDTO(documentTypeDAO.getDocumentType(id));
+        DocumentType documentType = null;
+        Optional<DocumentType> optionalDocumentType = documentTypeRepository.findById(id);
+        if (optionalDocumentType.isPresent()) {
+            documentType = optionalDocumentType.get();
+        }
+        return documentTypeMapper.toDTO(documentType);
     }
 
     @Override
-    @Transactional
     public void deleteDocumentType(int id) {
-        documentTypeDAO.deleteDocumentType(id);
+        documentTypeRepository.deleteById(id);
     }
 }

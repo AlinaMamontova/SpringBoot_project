@@ -1,7 +1,6 @@
 package com.example.springboot_project.service;
 
 import com.example.springboot_project.dto.DocumentTypeDTO;
-import com.example.springboot_project.entity.DocumentType;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
 package com.example.springboot_project.service;
 
-import com.example.springboot_project.dto.ClientDTO;
 import com.example.springboot_project.dto.CurrencyDTO;
 
 import java.util.List;

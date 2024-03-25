@@ -1,51 +1,51 @@
 package com.example.springboot_project.service;
 
-import com.example.springboot_project.dao.CardDAO;
+import com.example.springboot_project.dao.CardRepository;
 import com.example.springboot_project.dto.CardDTO;
 import com.example.springboot_project.entity.Card;
 import com.example.springboot_project.mapper.CardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CardServiceImpl implements CardService {
-    private CardDAO cardDAO;
+    private CardRepository cardRepository;
     private CardMapper cardMapper;
 
 
     @Autowired
-    public CardServiceImpl(CardDAO cardDAO, CardMapper cardMapper) {
-        this.cardDAO = cardDAO;
+    public CardServiceImpl(CardRepository cardRepository, CardMapper cardMapper) {
+        this.cardRepository = cardRepository;
         this.cardMapper = cardMapper;
     }
 
     @Override
-    @Transactional
     public List<CardDTO> getAllCards() {
-        List<Card> allCards = cardDAO.getAllCards();
+        List<Card> allCards = cardRepository.findAll();
         List<CardDTO> cardsDTOs = allCards.stream().map(cardMapper::toDTO).toList();
         return cardsDTOs;
     }
 
     @Override
-    @Transactional
     public void saveCard(CardDTO cardDTO) {
-        cardDAO.saveCard(cardMapper.dtoToCard(cardDTO));
+        cardRepository.save(cardMapper.dtoToCard(cardDTO));
     }
 
     @Override
-    @Transactional
     public CardDTO getCard(int id) {
-        CardDTO cardDTO = cardMapper.toDTO(cardDAO.getCard(id));
-        return cardDTO;
+        Card card = null;
+        Optional<Card> optionalCard = cardRepository.findById(id);
+        if (optionalCard.isPresent()) {
+            card = optionalCard.get();
+        }
+        return cardMapper.toDTO(card);
     }
 
     @Override
-    @Transactional
     public void deleteCard(int id) {
-        cardDAO.deleteCard(id);
+        cardRepository.deleteById(id);
     }
 }

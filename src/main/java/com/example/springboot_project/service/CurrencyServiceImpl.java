@@ -1,51 +1,51 @@
 package com.example.springboot_project.service;
 
-import com.example.springboot_project.dao.CurrencyDAO;
+import com.example.springboot_project.dao.CurrencyRepository;
 import com.example.springboot_project.dto.CurrencyDTO;
 import com.example.springboot_project.entity.Currency;
 import com.example.springboot_project.mapper.CurrencyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CurrencyServiceImpl implements CurrencyService {
-    private CurrencyDAO currencyDAO;
+    private CurrencyRepository currencyRepository;
     private CurrencyMapper currencyMapper;
 
 
     @Autowired
-    public CurrencyServiceImpl(CurrencyDAO currencyDAO, CurrencyMapper currencyMapper) {
-        this.currencyDAO = currencyDAO;
+    public CurrencyServiceImpl(CurrencyRepository currencyRepository, CurrencyMapper currencyMapper) {
+        this.currencyRepository = currencyRepository;
         this.currencyMapper = currencyMapper;
     }
 
     @Override
-    @Transactional
     public List<CurrencyDTO> getAllCurrencyDTO() {
-        List<Currency> allCurrencies = currencyDAO.getAllCurrencies();
+        List<Currency> allCurrencies = currencyRepository.findAll();
         List<CurrencyDTO> currenciesDTOs = allCurrencies.stream().map(currencyMapper::toDTO).toList();
         return currenciesDTOs;
     }
 
     @Override
-    @Transactional
     public void saveCurrency(CurrencyDTO currencyDTO) {
-        currencyDAO.saveCurrency(currencyMapper.dtoToCurrency(currencyDTO));
+        currencyRepository.save(currencyMapper.dtoToCurrency(currencyDTO));
     }
 
     @Override
-    @Transactional
     public CurrencyDTO getCurrencyDTO(int id) {
-        return currencyMapper.toDTO(currencyDAO.getCurrency(id));
+        Currency currency = null;
+        Optional<Currency> optionalCurrency = currencyRepository.findById(id);
+        if (optionalCurrency.isPresent()) {
+            currency = optionalCurrency.get();
+        }
+        return currencyMapper.toDTO(currency);
     }
 
     @Override
-    @Transactional
     public void deleteCurrency(int id) {
-        currencyDAO.deleteCurrency(id);
+        currencyRepository.deleteById(id);
     }
 }

@@ -1,7 +1,6 @@
 package com.example.springboot_project.service;
 
 import com.example.springboot_project.dto.AccountDTO;
-import com.example.springboot_project.dto.BankDTO;
 
 import java.util.List;
 

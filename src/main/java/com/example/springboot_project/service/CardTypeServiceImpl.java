@@ -1,50 +1,51 @@
 package com.example.springboot_project.service;
 
-import com.example.springboot_project.dao.CardTypeDAO;
+import com.example.springboot_project.dao.CardTypeRepository;
 import com.example.springboot_project.dto.CardTypeDTO;
 import com.example.springboot_project.entity.CardType;
 import com.example.springboot_project.mapper.CardTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CardTypeServiceImpl implements CardTypeService {
-    private CardTypeDAO cardTypeDAO;
+    private CardTypeRepository cardTypeRepository;
     private CardTypeMapper cardTypeMapper;
 
 
     @Autowired
-    public CardTypeServiceImpl(CardTypeDAO cardTypeDAO, CardTypeMapper cardTypeMapper) {
-        this.cardTypeDAO = cardTypeDAO;
+    public CardTypeServiceImpl(CardTypeRepository cardTypeRepository, CardTypeMapper cardTypeMapper) {
+        this.cardTypeRepository = cardTypeRepository;
         this.cardTypeMapper = cardTypeMapper;
     }
 
     @Override
-    @Transactional
     public List<CardTypeDTO> getAllCardTypesDTOs() {
-        List<CardType> allCardTypes = cardTypeDAO.getAllCardTypes();
+        List<CardType> allCardTypes = cardTypeRepository.findAll();
         List<CardTypeDTO> cardTypesDTOs = allCardTypes.stream().map(cardTypeMapper::toDTO).toList();
         return cardTypesDTOs;
     }
 
     @Override
-    @Transactional
     public void saveCardType(CardTypeDTO cardTypeDTO) {
-        cardTypeDAO.saveCardType(cardTypeMapper.dtoToCardType(cardTypeDTO));
+        cardTypeRepository.save(cardTypeMapper.dtoToCardType(cardTypeDTO));
     }
 
     @Override
-    @Transactional
     public CardTypeDTO getCardTypeDTO(int id) {
-        return cardTypeMapper.toDTO(cardTypeDAO.getCardType(id));
+        CardType cardType = null;
+        Optional<CardType> optionalCardType = cardTypeRepository.findById(id);
+        if (optionalCardType.isPresent()) {
+            cardType = optionalCardType.get();
+        }
+        return cardTypeMapper.toDTO(cardType);
     }
 
     @Override
-    @Transactional
     public void deleteCardType(int id) {
-        cardTypeDAO.deleteCardType(id);
+        cardTypeRepository.deleteById(id);
     }
 }

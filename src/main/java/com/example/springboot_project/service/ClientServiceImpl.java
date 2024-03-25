@@ -1,52 +1,52 @@
 package com.example.springboot_project.service;
 
-import com.example.springboot_project.dao.ClientDAO;
+import com.example.springboot_project.dao.ClientRepository;
 import com.example.springboot_project.dto.ClientDTO;
 import com.example.springboot_project.entity.Client;
 import com.example.springboot_project.mapper.ClientMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientServiceImpl implements ClientService {
-    private ClientDAO clientDAO;
+    private ClientRepository clientRepository;
     private ClientMapper clientMapper;
 
 
     @Autowired
-    public ClientServiceImpl(ClientDAO clientDAO, ClientMapper clientMapper) {
-        this.clientDAO = clientDAO;
+    public ClientServiceImpl(ClientRepository clientRepository, ClientMapper clientMapper) {
+        this.clientRepository = clientRepository;
         this.clientMapper = clientMapper;
     }
 
     @Override
-    @Transactional
     public List<ClientDTO> getAllClientDTO() {
-        List<Client> allClients = clientDAO.getAllClients();
+        List<Client> allClients = clientRepository.findAll();
         List<ClientDTO> clientsDTOs = allClients.stream().map(clientMapper::toDTO).toList();
         return clientsDTOs;
     }
 
     @Override
-    @Transactional
     public void saveClient(ClientDTO clientDTO) {
-        clientDAO.saveClient(clientMapper.dtoToClient(clientDTO));
+        clientRepository.save(clientMapper.dtoToClient(clientDTO));
     }
 
     @Override
-    @Transactional
     public ClientDTO getClientDTO(int id) {
-        return clientMapper.toDTO(clientDAO.getClient(id));
+        Client client = null;
+        Optional<Client> optionalClient = clientRepository.findById(id);
+        if (optionalClient.isPresent()) {
+            client = optionalClient.get();
+        }
+        return clientMapper.toDTO(client);
     }
 
     @Override
-    @Transactional
     public void deleteClient(int id) {
-        clientDAO.deleteClient(id);
+        clientRepository.deleteById(id);
     }
 }
 
