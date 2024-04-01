@@ -4,7 +4,6 @@ import com.example.springboot_project.dto.AccountDTO;
 import com.example.springboot_project.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

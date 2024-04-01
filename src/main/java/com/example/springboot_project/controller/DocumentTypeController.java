@@ -3,7 +3,7 @@ package com.example.springboot_project.controller;
 import com.example.springboot_project.dto.DocumentTypeDTO;
 import com.example.springboot_project.service.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class DocumentTypeController {
     }
 
     @DeleteMapping("/documentTypes/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @Secured("ADMIN")
     public String deleteDocument(@PathVariable("id") int id) {
         documentTypeService.deleteDocumentType(id);
         return "DocumentType with ID " + id + " was deleted";

@@ -3,7 +3,7 @@ package com.example.springboot_project.controller;
 import com.example.springboot_project.dto.ClientDTO;
 import com.example.springboot_project.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/clients/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @Secured("ADMIN")
     public String deleteClient(@PathVariable("id") int id) {
         clientService.deleteClient(id);
         return "Client with ID " + id + " was deleted";
