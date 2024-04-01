@@ -1,6 +1,7 @@
 package com.example.springboot_project.controller;
 
 import com.example.springboot_project.dto.CurrencyDTO;
+import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -26,6 +27,9 @@ public class CurrencyController {
     @GetMapping("/currencies/{id}")
     public CurrencyDTO getCurrencyById(@PathVariable("id") int id) {
         CurrencyDTO currencyDTO = currencyService.getCurrencyDTO(id);
+        if (currencyDTO == null) {
+            throw new NoSuchElementException("There is no currency with ID = " + id);
+        }
         return currencyDTO;
     }
 

@@ -1,6 +1,7 @@
 package com.example.springboot_project.controller;
 
 import com.example.springboot_project.dto.CardDTO;
+import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -26,6 +27,9 @@ public class CardController {
     @GetMapping("/cards/{id}")
     public CardDTO getCardById(@PathVariable("id") int id) {
         CardDTO cardDTO = cardService.getCard(id);
+        if (cardDTO == null) {
+            throw new NoSuchElementException("There is no card with ID = " + id);
+        }
         return cardService.getCard(id);
     }
 

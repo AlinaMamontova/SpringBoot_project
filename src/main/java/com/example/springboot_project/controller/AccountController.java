@@ -1,6 +1,7 @@
 package com.example.springboot_project.controller;
 
 import com.example.springboot_project.dto.AccountDTO;
+import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -26,6 +27,9 @@ public class AccountController {
     @GetMapping("/accounts/{id}")
     public AccountDTO getBankById(@PathVariable("id") int id) {
         AccountDTO accountDTO = accountService.getAccount(id);
+        if (accountDTO == null) {
+            throw new NoSuchElementException("There is no account with ID = " + id);
+        }
         return accountDTO;
     }
 
@@ -39,6 +43,7 @@ public class AccountController {
         accountService.saveAccount(accountDTO);
         return accountDTO;
     }
+
     @DeleteMapping("/accounts/{id}")
     @Secured("ADMIN")
     public String deleteAccount(@PathVariable("id") int id) {

@@ -1,6 +1,7 @@
 package com.example.springboot_project.controller;
 
 import com.example.springboot_project.dto.DocumentTypeDTO;
+import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -26,6 +27,9 @@ public class DocumentTypeController {
     @GetMapping("/documentTypes/{id}")
     public DocumentTypeDTO getDocumentTypeById(@PathVariable("id") int id) {
         DocumentTypeDTO documentTypeDTO = documentTypeService.getDocumentTypeDTO(id);
+        if (documentTypeDTO == null) {
+            throw new NoSuchElementException("There is no documentType with ID = " + id);
+        }
         return documentTypeDTO;
     }
 

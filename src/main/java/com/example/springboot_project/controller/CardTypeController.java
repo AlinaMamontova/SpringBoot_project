@@ -1,6 +1,7 @@
 package com.example.springboot_project.controller;
 
 import com.example.springboot_project.dto.CardTypeDTO;
+import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.CardTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -26,6 +27,9 @@ public class CardTypeController {
     @GetMapping("/cardTypes/{id}")
     public CardTypeDTO getCardTypeById(@PathVariable("id") int id) {
         CardTypeDTO cardTypeDTO = cardTypeService.getCardTypeDTO(id);
+        if (cardTypeDTO == null) {
+            throw new NoSuchElementException("There is no cardType with ID = " + id);
+        }
         return cardTypeDTO;
     }
 

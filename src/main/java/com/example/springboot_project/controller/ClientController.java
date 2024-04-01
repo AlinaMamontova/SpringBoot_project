@@ -1,6 +1,7 @@
 package com.example.springboot_project.controller;
 
 import com.example.springboot_project.dto.ClientDTO;
+import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -26,6 +27,9 @@ public class ClientController {
     @GetMapping("/clients/{id}")
     public ClientDTO getClientById(@PathVariable("id") int id) {
         ClientDTO clientDTO = clientService.getClientDTO(id);
+        if (clientDTO == null) {
+            throw new NoSuchElementException("There is no client with ID = " + id);
+        }
         return clientDTO;
     }
 

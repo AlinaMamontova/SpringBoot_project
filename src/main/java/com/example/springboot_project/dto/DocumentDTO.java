@@ -20,5 +20,5 @@ public class DocumentDTO {
     private int issueCode;
     private boolean documentStatus;
     private DocumentTypeDTO documentType;
-//    private Set<ClientDTO> clients; нужно или нет выводить список клиентов
+//    private Set<ClientDTO> clients;
 }

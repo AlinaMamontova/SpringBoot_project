@@ -1,6 +1,7 @@
 package com.example.springboot_project.controller;
 
 import com.example.springboot_project.dto.BankDTO;
+import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -26,6 +27,9 @@ public class BankController {
     @GetMapping("/banks/{id}")
     public BankDTO getBankById(@PathVariable("id") int id) {
         BankDTO bankDTO = bankService.getBank(id);
+        if (bankDTO == null) {
+            throw new NoSuchElementException("There is no bank with ID = " + id);
+        }
         return bankService.getBank(id);
     }
 

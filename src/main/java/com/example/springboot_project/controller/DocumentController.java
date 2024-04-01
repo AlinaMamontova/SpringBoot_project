@@ -1,6 +1,7 @@
 package com.example.springboot_project.controller;
 
 import com.example.springboot_project.dto.DocumentDTO;
+import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -26,6 +27,9 @@ public class DocumentController {
     @GetMapping("/documents/{id}")
     public DocumentDTO getCurrencyById(@PathVariable("id") int id) {
         DocumentDTO documentDTO = documentService.getDocumentDTO(id);
+        if (documentDTO == null) {
+            throw new NoSuchElementException("There is no document with ID = " + id);
+        }
         return documentDTO;
     }
 
