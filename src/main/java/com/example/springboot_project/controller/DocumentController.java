@@ -3,6 +3,7 @@ package com.example.springboot_project.controller;
 import com.example.springboot_project.dto.DocumentDTO;
 import com.example.springboot_project.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class DocumentController {
     }
 
     @DeleteMapping("/documents/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteDocument(@PathVariable("id") int id) {
         documentService.deleteDocument(id);
         return "Document with ID " + id + " was deleted";

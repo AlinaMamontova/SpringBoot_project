@@ -3,6 +3,7 @@ package com.example.springboot_project.controller;
 import com.example.springboot_project.dto.CardDTO;
 import com.example.springboot_project.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class CardController {
     }
 
     @DeleteMapping("/cards/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteCard(@PathVariable("id") int id) {
         cardService.deleteCard(id);
         return "Card with ID " + id + " was deleted";

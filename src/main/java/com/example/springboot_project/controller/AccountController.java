@@ -3,6 +3,8 @@ package com.example.springboot_project.controller;
 import com.example.springboot_project.dto.AccountDTO;
 import com.example.springboot_project.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +41,7 @@ public class AccountController {
         return accountDTO;
     }
     @DeleteMapping("/accounts/{id}")
+    @Secured("ADMIN")
     public String deleteAccount(@PathVariable("id") int id) {
         accountService.deleteAccount(id);
         return "Account with ID " + id + " was deleted";

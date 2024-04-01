@@ -3,6 +3,7 @@ package com.example.springboot_project.controller;
 import com.example.springboot_project.dto.CurrencyDTO;
 import com.example.springboot_project.service.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class CurrencyController {
     }
 
     @DeleteMapping("/currencies/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteCurrency(@PathVariable("id") int id) {
         currencyService.deleteCurrency(id);
         return "Currency with ID " + id + " was deleted";

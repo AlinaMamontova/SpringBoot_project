@@ -31,6 +31,8 @@ databaseChangeLog:
       file: db/changelog/changeSet/insert-into-client_document.sql
   - include:
       file: db/changelog/changeSet/insert-into-document.sql
+  - include:
+      file: db/changelog/changeSet/create-table-users.yaml
 
 
 
