@@ -5,11 +5,13 @@ import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.DocumentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/documentTypes")
 public class DocumentTypeController {
     private DocumentTypeService documentTypeService;
 
@@ -18,13 +20,13 @@ public class DocumentTypeController {
         this.documentTypeService = documentTypeService;
     }
 
-    @GetMapping("/documentTypes")
+    @GetMapping
     public List<DocumentTypeDTO> showAllDocumentTypes() {
         List<DocumentTypeDTO> alldocumentTypes = documentTypeService.getAllDocumentTypesDTO();
         return alldocumentTypes;
     }
 
-    @GetMapping("/documentTypes/{id}")
+    @GetMapping("/{id}")
     public DocumentTypeDTO getDocumentTypeById(@PathVariable("id") int id) {
         DocumentTypeDTO documentTypeDTO = documentTypeService.getDocumentTypeDTO(id);
         if (documentTypeDTO == null) {
@@ -33,20 +35,21 @@ public class DocumentTypeController {
         return documentTypeDTO;
     }
 
-    @PostMapping("/documentTypes")
-    public void addNewDocumentType(@RequestBody DocumentTypeDTO documentTypeDTO) {
+    @PostMapping
+    public void create(@RequestBody DocumentTypeDTO documentTypeDTO) {
         documentTypeService.saveDocumentType(documentTypeDTO);
     }
 
-    @PutMapping("/documentTypes")
-    public DocumentTypeDTO updateDocumentType(@RequestBody DocumentTypeDTO documentTypeDTO) {
+    @PutMapping("/{id}")
+    public DocumentTypeDTO update(@PathVariable int id, @RequestBody DocumentTypeDTO documentTypeDTO) {
+        documentTypeDTO.setId(id);
         documentTypeService.saveDocumentType(documentTypeDTO);
         return documentTypeDTO;
     }
 
-    @DeleteMapping("/documentTypes/{id}")
-    @Secured("ADMIN")
-    public String deleteDocument(@PathVariable("id") int id) {
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String delete(@PathVariable("id") int id) {
         documentTypeService.deleteDocumentType(id);
         return "DocumentType with ID " + id + " was deleted";
     }

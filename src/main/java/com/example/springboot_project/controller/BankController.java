@@ -5,11 +5,13 @@ import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/banks")
 public class BankController {
     private BankService bankService;
 
@@ -18,13 +20,13 @@ public class BankController {
         this.bankService = bankService;
     }
 
-    @GetMapping("/banks")
+    @GetMapping
     public List<BankDTO> showAllBanks() {
         List<BankDTO> bankDTOs = bankService.getAllBanks();
         return bankDTOs;
     }
 
-    @GetMapping("/banks/{id}")
+    @GetMapping("/{id}")
     public BankDTO getBankById(@PathVariable("id") int id) {
         BankDTO bankDTO = bankService.getBank(id);
         if (bankDTO == null) {
@@ -33,20 +35,21 @@ public class BankController {
         return bankService.getBank(id);
     }
 
-    @PostMapping("/banks")
-    public void addNewBank(@RequestBody BankDTO bankDTO) {
+    @PostMapping
+    public void create(@RequestBody BankDTO bankDTO) {
         bankService.saveBank(bankDTO);
     }
 
-    @PutMapping("/banks")
-    public BankDTO updateBank(@RequestBody BankDTO bankDTO) {
+    @PutMapping("/{id}")
+    public BankDTO update(@PathVariable int id, @RequestBody BankDTO bankDTO) {
+        bankDTO.setId(id);
         bankService.saveBank(bankDTO);
         return bankDTO;
     }
 
-    @DeleteMapping("/banks/{id}")
-    @Secured("ADMIN")
-    public String deleteBank(@PathVariable("id") int id) {
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String delete(@PathVariable("id") int id) {
         bankService.deleteBank(id);
         return "Bank with ID " + id + " was deleted";
     }

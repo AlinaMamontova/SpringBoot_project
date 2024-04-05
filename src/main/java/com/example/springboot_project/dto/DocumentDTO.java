@@ -1,12 +1,10 @@
 package com.example.springboot_project.dto;
 
 import com.example.springboot_project.entity.Client;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -16,9 +14,9 @@ import java.util.Set;
 public class DocumentDTO {
     private int id;
     private Date dateStart;
-    private String issue_organization;
+    private String issueOrganization;
     private int issueCode;
     private boolean documentStatus;
     private DocumentTypeDTO documentType;
-//    private Set<ClientDTO> clients;
+    private List<ClientDTO> clients;
 }

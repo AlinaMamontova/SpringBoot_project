@@ -13,6 +13,12 @@ public class GlobalExceptionHandling {
         incorrectData.setInfo(exception.getMessage());
         return new ResponseEntity<>(incorrectData, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler
+    public ResponseEntity<IncorrectData> handleException(ElementExists elementExists) {
+        IncorrectData incorrectData = new IncorrectData();
+        incorrectData.setInfo(elementExists.getMessage());
+        return new ResponseEntity<>(incorrectData, HttpStatus.ALREADY_REPORTED);
+    }
 
     @ExceptionHandler
     public ResponseEntity<IncorrectData> handleException(Exception exception) {

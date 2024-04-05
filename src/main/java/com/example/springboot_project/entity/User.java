@@ -8,7 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-
+import java.util.Set;
+//UserDetails предоставляет необходимую информацию для построения объекта Authentication
+//из DAO объектов приложения
+//Если аутентификация прошла успешно возвращает полностью заполненный экземпляр Authentication
 @Data
 @Builder
 @NoArgsConstructor
@@ -38,13 +41,13 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return password;
+    public String getUsername() {
+        return email;
     }
 
     @Override
-    public String getUsername() {
-        return email;
+    public String getPassword() {
+        return password;
     }
 
     @Override
@@ -66,5 +69,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

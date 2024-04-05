@@ -5,11 +5,13 @@ import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/documents")
 public class DocumentController {
     private DocumentService documentService;
 
@@ -18,13 +20,13 @@ public class DocumentController {
         this.documentService = documentService;
     }
 
-    @GetMapping("/documents")
+    @GetMapping
     public List<DocumentDTO> showAllDocuments() {
         List<DocumentDTO> alldocuments = documentService.getAllDocumentDTO();
         return alldocuments;
     }
 
-    @GetMapping("/documents/{id}")
+    @GetMapping("/{id}")
     public DocumentDTO getCurrencyById(@PathVariable("id") int id) {
         DocumentDTO documentDTO = documentService.getDocumentDTO(id);
         if (documentDTO == null) {
@@ -33,20 +35,21 @@ public class DocumentController {
         return documentDTO;
     }
 
-    @PostMapping("/documents")
-    public void addNewDocument(@RequestBody DocumentDTO documentDTO) {
+    @PostMapping
+    public void create(@RequestBody DocumentDTO documentDTO) {
         documentService.saveDocument(documentDTO);
     }
 
-    @PutMapping("/documents")
-    public DocumentDTO updateDocument(@RequestBody DocumentDTO documentDTO) {
+    @PutMapping("/{id}")
+    public DocumentDTO update(@PathVariable int id, @RequestBody DocumentDTO documentDTO) {
+        documentDTO.setId(id);
         documentService.saveDocument(documentDTO);
         return documentDTO;
     }
 
-    @DeleteMapping("/documents/{id}")
-    @Secured("ADMIN")
-    public String deleteDocument(@PathVariable("id") int id) {
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String delete(@PathVariable("id") int id) {
         documentService.deleteDocument(id);
         return "Document with ID " + id + " was deleted";
     }

@@ -28,7 +28,7 @@ public class Client {
     private String patronymic;
     @Column(name = "birthdate", nullable = false)
     private Date date;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany
     @JoinTable(
             name = "client_document",
             joinColumns = @JoinColumn(name = "client_id"),
@@ -38,11 +38,9 @@ public class Client {
 
     public void addDocument(Document document) {
         documents.add(document);
-        document.getClients().add(this);
     }
 
     public void removeDocument(Document document) {
         documents.remove(document);
-        document.getClients().remove(this);
     }
 }

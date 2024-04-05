@@ -1,5 +1,6 @@
 package com.example.springboot_project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +21,7 @@ public class Document {
     @Column(name = "date_start", nullable = false)
     private Date dateStart;
     @Column(name = "issue_organization", length = 255, nullable = false)
-    private String issue_organization;
+    private String issueOrganization;
     @Column(name = "issue_code", nullable = false)
     private int issueCode;
     @Column(name = "document_status", nullable = false)
@@ -34,15 +35,14 @@ public class Document {
             joinColumns = @JoinColumn(name = "document_id"),
             inverseJoinColumns = @JoinColumn(name = "client_id")
     )
+    @JsonIgnore
     private Set<Client> clients = new HashSet<>();
 
     public void addClient(Client client) {
         clients.add(client);
-        client.getDocuments().add(this);
     }
 
     public void removeClient(Client client) {
         clients.remove(client);
-        client.getDocuments().remove(this);
     }
 }

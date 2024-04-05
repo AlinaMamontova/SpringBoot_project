@@ -5,11 +5,13 @@ import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/cards")
 public class CardController {
     private CardService cardService;
 
@@ -18,13 +20,13 @@ public class CardController {
         this.cardService = cardService;
     }
 
-    @GetMapping("/cards")
+    @GetMapping
     public List<CardDTO> showAllBanks() {
         List<CardDTO> allCards = cardService.getAllCards();
         return allCards;
     }
 
-    @GetMapping("/cards/{id}")
+    @GetMapping("/{id}")
     public CardDTO getCardById(@PathVariable("id") int id) {
         CardDTO cardDTO = cardService.getCard(id);
         if (cardDTO == null) {
@@ -33,20 +35,21 @@ public class CardController {
         return cardService.getCard(id);
     }
 
-    @PostMapping("/cards")
-    public void addNewCard(@RequestBody CardDTO cardDTO) {
+    @PostMapping
+    public void create(@RequestBody CardDTO cardDTO) {
         cardService.saveCard(cardDTO);
     }
 
-    @PutMapping("/cards")
-    public CardDTO updateCard(@RequestBody CardDTO cardDTO) {
+    @PutMapping("/{id}")
+    public CardDTO update(@PathVariable int id, @RequestBody CardDTO cardDTO) {
+        cardDTO.setId(id);
         cardService.saveCard(cardDTO);
         return cardDTO;
     }
 
-    @DeleteMapping("/cards/{id}")
-    @Secured("ADMIN")
-    public String deleteCard(@PathVariable("id") int id) {
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String delete(@PathVariable("id") int id) {
         cardService.deleteCard(id);
         return "Card with ID " + id + " was deleted";
     }

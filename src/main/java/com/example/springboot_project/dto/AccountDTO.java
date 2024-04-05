@@ -1,12 +1,6 @@
 package com.example.springboot_project.dto;
 
-import com.example.springboot_project.entity.Bank;
-import com.example.springboot_project.entity.Card;
-import com.example.springboot_project.entity.Client;
-import com.example.springboot_project.entity.Currency;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter

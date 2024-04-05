@@ -5,11 +5,13 @@ import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/clients")
 public class ClientController {
     private ClientService clientService;
 
@@ -18,13 +20,13 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @GetMapping("/clients")
+    @GetMapping
     public List<ClientDTO> showAllClients() {
         List<ClientDTO> allClients = clientService.getAllClientDTO();
         return allClients;
     }
 
-    @GetMapping("/clients/{id}")
+    @GetMapping("/{id}")
     public ClientDTO getClientById(@PathVariable("id") int id) {
         ClientDTO clientDTO = clientService.getClientDTO(id);
         if (clientDTO == null) {
@@ -33,20 +35,21 @@ public class ClientController {
         return clientDTO;
     }
 
-    @PostMapping("/clients")
-    public void addNewAccount(@RequestBody ClientDTO clientDTO) {
+    @PostMapping
+    public void create(@RequestBody ClientDTO clientDTO) {
         clientService.saveClient(clientDTO);
     }
 
-    @PutMapping("/clients")
-    public ClientDTO updateClient(@RequestBody ClientDTO clientDTO) {
+    @PutMapping("/{id}")
+    public ClientDTO update(@PathVariable int id, @RequestBody ClientDTO clientDTO) {
+        clientDTO.setId(id);
         clientService.saveClient(clientDTO);
         return clientDTO;
     }
 
-    @DeleteMapping("/clients/{id}")
-    @Secured("ADMIN")
-    public String deleteClient(@PathVariable("id") int id) {
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String delete(@PathVariable("id") int id) {
         clientService.deleteClient(id);
         return "Client with ID " + id + " was deleted";
     }

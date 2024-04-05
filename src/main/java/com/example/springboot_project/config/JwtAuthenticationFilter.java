@@ -16,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+//Фильтр наследует OncePerRequestFilter, что гарантирует единоразовый вызов фильтра для одного запроса.
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -44,11 +45,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = authHeader.substring(7);
         //извлекаем email из токена
         email = jwtService.extractEmail(jwt);
-        //если email не null и пользователь ещё не аутентифицирован
+        //если email не null
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
-            //если токен действующий и принадлежит пользователю
-            //проверка токена на валидность
+            //// Если токен валиден, то аутентифицируем пользователя
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,

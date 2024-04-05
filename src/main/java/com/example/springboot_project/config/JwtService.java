@@ -1,9 +1,11 @@
 package com.example.springboot_project.config;
 
+import com.example.springboot_project.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -12,50 +14,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-//работа с токеном
-//класс нужен для валидации токена
+
+//Сервис для работы с Jwt
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "54960c24ef15b090a920b131d10cd54001572d02f0be1046724b57fc61894e16";
-    //достать одно конкретное утверждение
-    public String extractEmail(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-    //генерация токена без extraClaims, только из данных самого пользователя
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
-    }
-    //в Map содержатся доп.утверждения, которые мы хотим добавить в Token
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder()
-                .claims(extraClaims)
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                .signWith(getSignInKey())
-                .compact();
-    }
-    //валидация токена
-    //userdetails нужен, чтобы проверить принадлежит ли токен пользователю
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractEmail(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
-    }
-    //isTokenExpired() - истек или нет токен
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-    //извлечь дату истечения
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
+    @Value("${token.signing.key}")
+    private String jwtSecret;
 
-    //достать одно утверждение
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-    //извлекаем весь payload, все claims
+    //Извлечение всех данных из токена
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getSignInKey())
@@ -63,9 +29,54 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-    //получение ключа подписи
+
+    //Извлечение определенных данных из токена данных из токена
+    private <T> T extractClaims(String token, Function<Claims, T> claimsResolvers) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolvers.apply(claims);
+    }
+
+    //Извлечение email из токена
+    public String extractEmail(String token) {
+        return extractClaims(token, Claims::getSubject);
+    }
+
+    //получение ключа для подписи токена
     private SecretKey getSignInKey() {
-        byte[] bytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] bytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(bytes);
+    }
+
+    //Генерация токена с данными пользователя
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof User customUser) {
+            claims.put("id", customUser.getId());
+            claims.put("role", customUser.getRole());
+        }
+        return Jwts.builder()
+                .claims(claims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith(getSignInKey())
+                .compact();
+    }
+
+    //Проверка токена на валидность
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String userEmail = extractEmail(token);
+        return userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    //Проверка токена на просроченность
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    //Извлечение даты истечения
+    //6
+    private Date extractExpiration(String token) {
+        return extractClaims(token, Claims::getExpiration);
     }
 }

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+//Регистрация пользователя
 @Data
 @Builder
 @AllArgsConstructor

@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-client-document
+      author: Alina Mamontova
+      changes:
+        - createTable:
+            tableName: client_document
+            columns:
+              - column:
+                  name: client_id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    foreignKeyName: fk_client_document_client
+                    references: client(id)
+              - column:
+                  name: document_id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    foreignKeyName: fk_client_document_document
+                    references: document(id)
+
+
+
+
+

@@ -5,11 +5,13 @@ import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/currencies")
 public class CurrencyController {
     private CurrencyService currencyService;
 
@@ -18,13 +20,13 @@ public class CurrencyController {
         this.currencyService = currencyService;
     }
 
-    @GetMapping("/currencies")
+    @GetMapping
     public List<CurrencyDTO> showAllClients() {
         List<CurrencyDTO> allCurrencies = currencyService.getAllCurrencyDTO();
         return allCurrencies;
     }
 
-    @GetMapping("/currencies/{id}")
+    @GetMapping("/{id}")
     public CurrencyDTO getCurrencyById(@PathVariable("id") int id) {
         CurrencyDTO currencyDTO = currencyService.getCurrencyDTO(id);
         if (currencyDTO == null) {
@@ -33,20 +35,21 @@ public class CurrencyController {
         return currencyDTO;
     }
 
-    @PostMapping("/currencies")
-    public void addNewCurrency(@RequestBody CurrencyDTO currencyDTO) {
+    @PostMapping
+    public void create(@RequestBody CurrencyDTO currencyDTO) {
         currencyService.saveCurrency(currencyDTO);
     }
 
-    @PutMapping("/currencies")
-    public CurrencyDTO updateCurrency(@RequestBody CurrencyDTO currencyDTO) {
+    @PutMapping("/{id}")
+    public CurrencyDTO update(@PathVariable int id, @RequestBody CurrencyDTO currencyDTO) {
+        currencyDTO.setId(id);
         currencyService.saveCurrency(currencyDTO);
         return currencyDTO;
     }
 
-    @DeleteMapping("/currencies/{id}")
-    @Secured("ADMIN")
-    public String deleteCurrency(@PathVariable("id") int id) {
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String delete(@PathVariable("id") int id) {
         currencyService.deleteCurrency(id);
         return "Currency with ID " + id + " was deleted";
     }

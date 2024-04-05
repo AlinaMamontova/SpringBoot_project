@@ -16,7 +16,7 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeSet/create-table-document-type.yaml
   - include:
-      file: db/changelog/changeSet/create-table-client-document.sql
+      file: db/changelog/changeSet/create-table-client-document.yaml
   - include:
       file: db/changelog/changeSet/insert-into-account.sql
   - include:

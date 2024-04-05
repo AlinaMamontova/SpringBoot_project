@@ -5,11 +5,13 @@ import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/accounts")
 public class AccountController {
     private AccountService accountService;
 
@@ -18,13 +20,13 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/accounts")
+    @GetMapping
     public List<AccountDTO> showAllAccounts() {
         List<AccountDTO> allAccounts = accountService.getAllAccounts();
         return allAccounts;
     }
 
-    @GetMapping("/accounts/{id}")
+    @GetMapping("/{id}")
     public AccountDTO getBankById(@PathVariable("id") int id) {
         AccountDTO accountDTO = accountService.getAccount(id);
         if (accountDTO == null) {
@@ -33,20 +35,21 @@ public class AccountController {
         return accountDTO;
     }
 
-    @PostMapping("/accounts")
-    public void addNewAccount(@RequestBody AccountDTO accountDTO) {
+    @PostMapping
+    public void create(@RequestBody AccountDTO accountDTO) {
         accountService.saveAccount(accountDTO);
     }
 
-    @PutMapping("/accounts")
-    public AccountDTO updateAccount(@RequestBody AccountDTO accountDTO) {
+    @PutMapping("/{id}")
+    public AccountDTO update(@PathVariable int id, @RequestBody AccountDTO accountDTO) {
+        accountDTO.setId(id);
         accountService.saveAccount(accountDTO);
         return accountDTO;
     }
 
-    @DeleteMapping("/accounts/{id}")
-    @Secured("ADMIN")
-    public String deleteAccount(@PathVariable("id") int id) {
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String delete(@PathVariable("id") int id) {
         accountService.deleteAccount(id);
         return "Account with ID " + id + " was deleted";
     }
