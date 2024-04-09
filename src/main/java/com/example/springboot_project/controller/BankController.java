@@ -4,7 +4,6 @@ import com.example.springboot_project.dto.BankDTO;
 import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +35,8 @@ public class BankController {
     }
 
     @PostMapping
-    public void create(@RequestBody BankDTO bankDTO) {
-        bankService.saveBank(bankDTO);
+    public BankDTO create(@RequestBody BankDTO bankDTO) {
+        return bankService.saveBank(bankDTO);
     }
 
     @PutMapping("/{id}")

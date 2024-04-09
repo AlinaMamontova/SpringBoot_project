@@ -1,13 +1,22 @@
 package com.example.springboot_project.service;
 
+import com.example.springboot_project.dao.UserRepository;
 import com.example.springboot_project.dto.UserDTO;
-import com.example.springboot_project.entity.User;
+import com.example.springboot_project.mapper.UserMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+@Service
+@RequiredArgsConstructor
+public class UserService {
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-public interface UserService {
-    void saveUser(UserDTO userDTO);
+    public void saveUser(UserDTO userDTO) {
+        userRepository.save(userMapper.dtoToUser(userDTO));
+    }
 
-    void deleteUser(int id);
-
+    public void deleteUser(int id) {
+        userRepository.deleteById(id);
+    }
 }

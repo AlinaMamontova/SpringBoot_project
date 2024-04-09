@@ -4,7 +4,6 @@ import com.example.springboot_project.dto.AccountDTO;
 import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
-    private AccountService accountService;
+    private final AccountService accountService;
 
     @Autowired
     public AccountController(AccountService accountService) {
@@ -27,7 +26,7 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-    public AccountDTO getBankById(@PathVariable("id") int id) {
+    public AccountDTO getAccountById(@PathVariable("id") int id) {
         AccountDTO accountDTO = accountService.getAccount(id);
         if (accountDTO == null) {
             throw new NoSuchElementException("There is no account with ID = " + id);
@@ -36,8 +35,8 @@ public class AccountController {
     }
 
     @PostMapping
-    public void create(@RequestBody AccountDTO accountDTO) {
-        accountService.saveAccount(accountDTO);
+    public AccountDTO create(@RequestBody AccountDTO accountDTO) {
+        return accountService.saveAccount(accountDTO);
     }
 
     @PutMapping("/{id}")

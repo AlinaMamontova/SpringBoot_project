@@ -1,5 +1,6 @@
 package com.example.springboot_project.entity;
 
+import com.example.springboot_project.dto.DocumentDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,4 +44,5 @@ public class Client {
     public void removeDocument(Document document) {
         documents.remove(document);
     }
+
 }

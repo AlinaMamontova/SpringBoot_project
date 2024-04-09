@@ -29,13 +29,12 @@ public class Document {
     @OneToOne
     @JoinColumn(name = "document_type_id", nullable = false)
     private DocumentType documentType;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinTable(
             name = "client_document",
             joinColumns = @JoinColumn(name = "document_id"),
             inverseJoinColumns = @JoinColumn(name = "client_id")
     )
-    @JsonIgnore
     private Set<Client> clients = new HashSet<>();
 
     public void addClient(Client client) {

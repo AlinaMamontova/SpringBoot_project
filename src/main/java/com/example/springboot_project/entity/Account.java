@@ -23,7 +23,7 @@ public class Account {
     private boolean accountStatus;
     @Column(name = "balance", nullable = false)
     private double balance;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "bank_id", nullable = false)
     private Bank bank;
     @OneToOne

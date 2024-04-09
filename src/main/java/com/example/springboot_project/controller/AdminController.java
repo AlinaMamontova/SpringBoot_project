@@ -1,7 +1,6 @@
 package com.example.springboot_project.controller;
 
 import com.example.springboot_project.config.ApplicationConfig;
-import com.example.springboot_project.dao.UserRepository;
 import com.example.springboot_project.dto.UserDTO;
 import com.example.springboot_project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
