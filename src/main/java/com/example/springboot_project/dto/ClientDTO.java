@@ -9,6 +9,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode(exclude = "documents")
 public class ClientDTO {
     private int id;
     private String firstName;

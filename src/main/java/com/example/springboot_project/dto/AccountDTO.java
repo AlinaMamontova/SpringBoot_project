@@ -6,6 +6,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class AccountDTO {
     private int id;
     private boolean accountStatus;

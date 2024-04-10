@@ -14,6 +14,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "card_type")
+@ToString
+@EqualsAndHashCode
 public class CardType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

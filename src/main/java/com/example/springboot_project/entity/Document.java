@@ -13,6 +13,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "document")
+@ToString
+@EqualsAndHashCode(exclude = "clients")
 public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -12,12 +12,15 @@ import java.util.Set;
 //UserDetails предоставляет необходимую информацию для построения объекта Authentication
 //из DAO объектов приложения
 //Если аутентификация прошла успешно возвращает полностью заполненный экземпляр Authentication
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
+@ToString
+@EqualsAndHashCode
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

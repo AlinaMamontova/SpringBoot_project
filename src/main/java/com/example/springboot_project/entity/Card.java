@@ -10,6 +10,8 @@ import java.sql.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "card")
+@ToString
+@EqualsAndHashCode
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

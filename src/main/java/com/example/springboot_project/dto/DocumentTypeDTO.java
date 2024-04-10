@@ -6,6 +6,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class DocumentTypeDTO {
     private int id;
     private String typeName;

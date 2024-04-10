@@ -9,6 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "document_type")
+@ToString
+@EqualsAndHashCode
 public class DocumentType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

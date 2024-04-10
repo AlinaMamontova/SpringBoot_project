@@ -7,6 +7,8 @@ import java.sql.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class CardDTO {
     private int id;
     private Date dateStart;

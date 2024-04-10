@@ -6,6 +6,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class BankDTO {
     private int id;
     private int bik;

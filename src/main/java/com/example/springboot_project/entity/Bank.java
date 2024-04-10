@@ -9,6 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "bank")
+@ToString
+@EqualsAndHashCode
 public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
