@@ -1,13 +1,18 @@
 package com.example.springboot_project.controller;
 
-import com.example.springboot_project.dao.*;
-import com.example.springboot_project.dto.AccountDTO;
-import com.example.springboot_project.dto.BankDTO;
-import com.example.springboot_project.dto.ClientDTO;
-import com.example.springboot_project.dto.CurrencyDTO;
+import com.example.springboot_project.dao.AccountRepository;
+import com.example.springboot_project.dao.BankRepository;
+import com.example.springboot_project.dao.ClientRepository;
+import com.example.springboot_project.dao.CurrencyRepository;
 import com.example.springboot_project.entity.Account;
-import com.example.springboot_project.mapper.*;
+import com.example.springboot_project.entity.Bank;
+import com.example.springboot_project.entity.Client;
+import com.example.springboot_project.entity.Currency;
+import com.example.springboot_project.mapper.AccountMapper;
+import com.example.springboot_project.util.ModelGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.instancio.Instancio;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +22,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(
         properties = {
-                "spring.jpa.defer-datasource-initialization=false",
+                "spring.jpa.defer-datasource-initialization=false",//если true, то сначала настраиваются схемы, и только потом источник данных
                 "spring.sql.init.mode=never"
         }
 )
@@ -41,29 +41,26 @@ public class AccountControllerTest {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
-    private AccountMapper accountMapper;
-    @Autowired
     private BankRepository bankRepository;
-    @Autowired
-    private BankMapper bankMapper;
-    @Autowired
-    private CurrencyRepository currencyRepository;
-    @Autowired
-    private CurrencyMapper currencyMapper;
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
-    private ClientMapper clientMapper;
+    private CurrencyRepository currencyRepository;
     @Autowired
-    private DocumentTypeRepository documentTypeRepository;
-    @Autowired
-    private DocumentTypeMapper documentTypeMapper;
-    @Autowired
-    private DocumentRepository documentRepository;
-    @Autowired
-    private DocumentMapper documentMapper;
+    private AccountMapper accountMapper;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private ModelGenerator modelGenerator;
+    private Account accountTest;
+    private Client clientTest;
+    private Bank bankTest;
+    private Currency currencyTest;
+
+    @BeforeEach
+    void beforeEach() {
+
+    }
 
     @Test
     @DisplayName("GET /accounts - получить список accounts")
@@ -84,31 +81,20 @@ public class AccountControllerTest {
                 .andExpect(status().isOk());
 
     }
-    //не работает
+
     @Test
     @DisplayName("POST /accounts - создание account")
     void testCreate() throws Exception {
-//        int id = 6;
-//
-//        AccountDTO accountDTO = new AccountDTO(
-//                id,
-//                true,
-//                700,
-//                new BankDTO(),
-//                new CurrencyDTO(),
-//                new ClientDTO()
-//
-//        );
-//        String accountJson = objectMapper.writeValueAsString(accountDTO);
-//        mockMvc.perform(post("/accounts")
-//                        .content(accountJson)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .with(SecurityMockMvcRequestPostProcessors.user("ROLE_USER")))
-//                .andExpect(status().isOk())
-//                .andDo(print());
-//
-
+        Account accountTest = new Account();
+        String accountJson = objectMapper.writeValueAsString(accountTest);
+        mockMvc.perform(post("/accounts")
+                        .with(SecurityMockMvcRequestPostProcessors.user("ROLE_USER"))
+                        .content(accountJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
+
     //не знаю как тестировать
     @Test
     @DisplayName("PUT /accounts/id -изменение bank по id")

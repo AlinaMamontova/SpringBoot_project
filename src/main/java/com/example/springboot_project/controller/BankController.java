@@ -1,12 +1,15 @@
 package com.example.springboot_project.controller;
 
 import com.example.springboot_project.dto.BankDTO;
+import com.example.springboot_project.dto.UserDTO;
 import com.example.springboot_project.exception.NoSuchElementException;
 import com.example.springboot_project.service.BankService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,10 +53,10 @@ public class BankController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Изменение bank по id")
-    public BankDTO update(@PathVariable int id, @RequestBody BankDTO bankDTO) {
+    public ResponseEntity<BankDTO> update(@PathVariable int id, @RequestBody BankDTO bankDTO) {
         bankDTO.setId(id);
         bankService.saveBank(bankDTO);
-        return bankDTO;
+        return new ResponseEntity<>(bankService.saveBank(bankDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
