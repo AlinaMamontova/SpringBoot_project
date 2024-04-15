@@ -11,7 +11,6 @@ import com.example.springboot_project.entity.Currency;
 import com.example.springboot_project.mapper.AccountMapper;
 import com.example.springboot_project.util.ModelGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
