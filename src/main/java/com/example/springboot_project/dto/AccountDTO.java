@@ -12,7 +12,7 @@ import lombok.*;
 @Schema(description = "Информация об account")
 public class AccountDTO {
     @Schema(description = "Идентификатор account")
-    private int id;
+    private Integer id;
     @Schema(description = "Cтатус account")
     private boolean accountStatus;
     @Schema(description = "Баланс account")
@@ -23,4 +23,12 @@ public class AccountDTO {
     private CurrencyDTO currency;
     @Schema(description = "Клиент")
     private ClientDTO client;
+
+    public AccountDTO(boolean accountStatus, double balance, BankDTO bank, CurrencyDTO currency, ClientDTO client) {
+        this.accountStatus = accountStatus;
+        this.balance = balance;
+        this.bank = bank;
+        this.currency = currency;
+        this.client = client;
+    }
 }

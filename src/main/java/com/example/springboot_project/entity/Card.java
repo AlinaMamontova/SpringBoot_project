@@ -1,5 +1,6 @@
 package com.example.springboot_project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,4 +38,14 @@ public class Card {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+    public Card(Date dateStart, Date dateEnd, int cvc, boolean cardStatus, double balance, Client client, CardType cardType, Account account) {
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
+        this.cvc = cvc;
+        this.cardStatus = cardStatus;
+        this.balance = balance;
+        this.client = client;
+        this.cardType = cardType;
+        this.account = account;
+    }
 }

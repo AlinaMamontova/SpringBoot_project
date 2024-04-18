@@ -39,12 +39,11 @@ public class Client {
     )
     private List<Document> documents = new ArrayList<>();
 
-    public void addDocument(Document document) {
-        documents.add(document);
+    public Client(String firstName, String lastName, String patronymic, Date date, List<Document> documents) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.patronymic = patronymic;
+        this.date = date;
+        this.documents = documents;
     }
-
-    public void removeDocument(Document document) {
-        documents.remove(document);
-    }
-
 }

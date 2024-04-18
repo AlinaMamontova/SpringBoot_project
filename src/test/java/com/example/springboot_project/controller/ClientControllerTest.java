@@ -1,8 +1,11 @@
 package com.example.springboot_project.controller;
 
-import com.example.springboot_project.dao.BankRepository;
-import com.example.springboot_project.dto.BankDTO;
-import com.example.springboot_project.mapper.BankMapper;
+import com.example.springboot_project.dao.ClientRepository;
+import com.example.springboot_project.dao.DocumentRepository;
+import com.example.springboot_project.dto.ClientDTO;
+import com.example.springboot_project.dto.DocumentDTO;
+import com.example.springboot_project.mapper.ClientMapper;
+import com.example.springboot_project.mapper.DocumentMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -11,31 +14,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Date;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
-public class BankControllerTest extends CommonTest {
+public class ClientControllerTest extends CommonTest {
     @Autowired
-    private BankRepository bankRepository;
+    ClientRepository clientRepository;
     @Autowired
-    private BankMapper bankMapper;
+    ClientMapper clientMapper;
+    @Autowired
+    DocumentRepository documentRepository;
+    @Autowired
+    DocumentMapper documentMapper;
 
     @Override
     @Test
     @Order(0)
-    @DisplayName("POST /banks - создаем bank")
+    @DisplayName("POST /clients - создаем client")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void createObject() throws Exception {
-        BankDTO bankDTO = new BankDTO();
-        bankDTO.setBik(332);
-        bankDTO.setBankName("Santander");
-        bankDTO.setCountry("Spain");
-        bankDTO.setCity("Malaga");
-        String result = mvc.perform(MockMvcRequestBuilders.post("/banks")
+        ClientDTO clientDTO = new ClientDTO();
+        DocumentDTO documentDTO = documentMapper.toDTO(documentRepository.findById(23).get());
+        clientDTO.setFirstName("Egor");
+        clientDTO.setLastName("Mironov");
+        clientDTO.setPatronymic("Alexeevich");
+        clientDTO.setDate(new Date(System.currentTimeMillis()));
+        clientDTO.setDocuments(List.of(documentDTO));
+
+        String result = mvc.perform(MockMvcRequestBuilders.post("/clients")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(bankDTO))
+                        .content(asJsonString(clientDTO))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn()
@@ -47,14 +61,16 @@ public class BankControllerTest extends CommonTest {
     @Override
     @Test
     @Order(1)
-    @DisplayName("PUT /banks/{id} - изменяем bank")
+    @Transactional
+    @DisplayName("PUT /clients - изменяем client")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void updateObject() throws Exception {
-        BankDTO bankDTO = bankMapper.toDTO(bankRepository.findById(4).get());
-        int id = bankDTO.getId();
-        String result = mvc.perform(MockMvcRequestBuilders.put("/banks/{id}", id)
+        ClientDTO clientDTO = clientMapper.toDTO(clientRepository.findById(2).get());
+        clientDTO.setFirstName("Adam");
+        int id = clientDTO.getId();
+        String result = mvc.perform(MockMvcRequestBuilders.put("/clients/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(bankDTO))
+                        .content(asJsonString(clientDTO))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn()
@@ -66,11 +82,10 @@ public class BankControllerTest extends CommonTest {
     @Override
     @Test
     @Order(2)
-    @DisplayName("DELETE /banks/{id} - удаляем bank")
+    @DisplayName("DELETE /clients - удаляем client")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void deleteObject() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders
-                        .delete("/banks/{id}", "7")
+        String result = mvc.perform(MockMvcRequestBuilders.delete("/clients/{id}", "19")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -84,10 +99,10 @@ public class BankControllerTest extends CommonTest {
     @Override
     @Test
     @Order(3)
-    @DisplayName("GET /banks - получаем список accounts")
+    @DisplayName("GET /clients - получаем список clients")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void listAll() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders.get("/banks")
+        String result = mvc.perform(MockMvcRequestBuilders.get("/clients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -101,11 +116,11 @@ public class BankControllerTest extends CommonTest {
     @Override
     @Test
     @Order(4)
-    @DisplayName("GET /banks/{id} - получаем bank по id")
+    @DisplayName("GET /clients/{id} - получаем client по id")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void getById() throws Exception {
-        int id = 42;
-        String result = mvc.perform(MockMvcRequestBuilders.get("/banks/{id}", id)
+        int id = 10;
+        String result = mvc.perform(MockMvcRequestBuilders.get("/clients/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())

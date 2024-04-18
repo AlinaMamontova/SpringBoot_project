@@ -4,6 +4,7 @@ import com.example.springboot_project.dao.AccountRepository;
 import com.example.springboot_project.dto.AccountDTO;
 import com.example.springboot_project.entity.Account;
 import com.example.springboot_project.mapper.AccountMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,17 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService {
-    private AccountRepository accountRepository;
-    private AccountMapper accountMapper;
-
-
-    @Autowired
-    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
-        this.accountRepository = accountRepository;
-        this.accountMapper = accountMapper;
-    }
-
+    private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
 
     public List<AccountDTO> getAllAccounts() {
         List<Account> allAccounts = accountRepository.findAll();

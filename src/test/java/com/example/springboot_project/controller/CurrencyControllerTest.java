@@ -1,8 +1,8 @@
 package com.example.springboot_project.controller;
 
-import com.example.springboot_project.dao.BankRepository;
-import com.example.springboot_project.dto.BankDTO;
-import com.example.springboot_project.mapper.BankMapper;
+import com.example.springboot_project.dao.CurrencyRepository;
+import com.example.springboot_project.dto.CurrencyDTO;
+import com.example.springboot_project.mapper.CurrencyMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -11,31 +11,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
-public class BankControllerTest extends CommonTest {
+public class CurrencyControllerTest extends CommonTest {
     @Autowired
-    private BankRepository bankRepository;
+    CurrencyMapper currencyMapper;
     @Autowired
-    private BankMapper bankMapper;
+    CurrencyRepository currencyRepository;
 
     @Override
     @Test
     @Order(0)
-    @DisplayName("POST /banks - создаем bank")
+    @DisplayName("POST /currencies - создаем currency")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void createObject() throws Exception {
-        BankDTO bankDTO = new BankDTO();
-        bankDTO.setBik(332);
-        bankDTO.setBankName("Santander");
-        bankDTO.setCountry("Spain");
-        bankDTO.setCity("Malaga");
-        String result = mvc.perform(MockMvcRequestBuilders.post("/banks")
+        CurrencyDTO currencyDTO = new CurrencyDTO();
+        currencyDTO.setCurrencyName("Австралийский доллар");
+        String result = mvc.perform(MockMvcRequestBuilders.post("/currencies")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(bankDTO))
+                        .content(asJsonString(currencyDTO))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn()
@@ -44,19 +42,23 @@ public class BankControllerTest extends CommonTest {
         log.info(result);
     }
 
+    //не меняет
     @Override
     @Test
     @Order(1)
-    @DisplayName("PUT /banks/{id} - изменяем bank")
+    @Transactional
+    @DisplayName("PUT /currencies - изменяем currency")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void updateObject() throws Exception {
-        BankDTO bankDTO = bankMapper.toDTO(bankRepository.findById(4).get());
-        int id = bankDTO.getId();
-        String result = mvc.perform(MockMvcRequestBuilders.put("/banks/{id}", id)
+        CurrencyDTO currencyDTO = currencyMapper.toDTO(currencyRepository.findById(3).get());
+        currencyDTO.setCurrencyName("Юань");
+        int id = currencyDTO.getId();
+        String result = mvc.perform(MockMvcRequestBuilders.put("/currencies/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(bankDTO))
+                        .content(asJsonString(currencyDTO))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
+                .andDo(print())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -66,11 +68,10 @@ public class BankControllerTest extends CommonTest {
     @Override
     @Test
     @Order(2)
-    @DisplayName("DELETE /banks/{id} - удаляем bank")
+    @DisplayName("DELETE /currencies - удаляем client")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void deleteObject() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders
-                        .delete("/banks/{id}", "7")
+        String result = mvc.perform(MockMvcRequestBuilders.delete("/currencies/{id}", "4")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -84,10 +85,10 @@ public class BankControllerTest extends CommonTest {
     @Override
     @Test
     @Order(3)
-    @DisplayName("GET /banks - получаем список accounts")
+    @DisplayName("GET /currencies - получаем список currencies")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void listAll() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders.get("/banks")
+        String result = mvc.perform(MockMvcRequestBuilders.get("/currencies")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -101,11 +102,11 @@ public class BankControllerTest extends CommonTest {
     @Override
     @Test
     @Order(4)
-    @DisplayName("GET /banks/{id} - получаем bank по id")
+    @DisplayName("GET /currencies/{id} - получаем currency по id")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void getById() throws Exception {
-        int id = 42;
-        String result = mvc.perform(MockMvcRequestBuilders.get("/banks/{id}", id)
+        int id = 3;
+        String result = mvc.perform(MockMvcRequestBuilders.get("/currencies/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())

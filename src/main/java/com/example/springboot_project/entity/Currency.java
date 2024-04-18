@@ -18,4 +18,8 @@ public class Currency {
     private int id;
     @Column(name = "currency_name", length = 255, nullable = false)
     private String currencyName;
+
+    public Currency(String currencyName) {
+        this.currencyName = currencyName;
+    }
 }

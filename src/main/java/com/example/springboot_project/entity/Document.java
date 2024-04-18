@@ -1,12 +1,12 @@
 package com.example.springboot_project.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -39,11 +39,12 @@ public class Document {
     )
     private Set<Client> clients = new HashSet<>();
 
-    public void addClient(Client client) {
-        clients.add(client);
-    }
-
-    public void removeClient(Client client) {
-        clients.remove(client);
+    public Document(Date dateStart, String issueOrganization, int issueCode, boolean documentStatus, DocumentType documentType, Set<Client> clients) {
+        this.dateStart = dateStart;
+        this.issueOrganization = issueOrganization;
+        this.issueCode = issueCode;
+        this.documentStatus = documentStatus;
+        this.documentType = documentType;
+        this.clients = clients;
     }
 }

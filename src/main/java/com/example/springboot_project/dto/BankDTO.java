@@ -14,4 +14,11 @@ public class BankDTO {
     private String bankName;
     private String country;
     private String city;
+
+    public BankDTO(int bik, String bankName, String country, String city) {
+        this.bik = bik;
+        this.bankName = bankName;
+        this.country = country;
+        this.city = city;
+    }
 }

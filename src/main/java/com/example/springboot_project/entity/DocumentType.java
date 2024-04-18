@@ -18,4 +18,8 @@ public class DocumentType {
     private int id;
     @Column(name = "type_name", length = 255, nullable = false)
     private String typeName;
+
+    public DocumentType(String typeName) {
+        this.typeName = typeName;
+    }
 }

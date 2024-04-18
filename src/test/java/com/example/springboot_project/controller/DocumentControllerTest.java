@@ -1,8 +1,11 @@
 package com.example.springboot_project.controller;
 
-import com.example.springboot_project.dao.BankRepository;
-import com.example.springboot_project.dto.BankDTO;
-import com.example.springboot_project.mapper.BankMapper;
+import com.example.springboot_project.dao.DocumentRepository;
+import com.example.springboot_project.dao.DocumentTypeRepository;
+import com.example.springboot_project.dto.DocumentDTO;
+import com.example.springboot_project.dto.DocumentTypeDTO;
+import com.example.springboot_project.mapper.DocumentMapper;
+import com.example.springboot_project.mapper.DocumentTypeMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -11,31 +14,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Date;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
-public class BankControllerTest extends CommonTest {
+public class DocumentControllerTest extends CommonTest {
     @Autowired
-    private BankRepository bankRepository;
+    DocumentMapper documentMapper;
     @Autowired
-    private BankMapper bankMapper;
+    DocumentRepository documentRepository;
+    @Autowired
+    DocumentTypeRepository documentTypeRepository;
+    @Autowired
+    DocumentTypeMapper documentTypeMapper;
 
     @Override
     @Test
     @Order(0)
-    @DisplayName("POST /banks - создаем bank")
+    @DisplayName("POST /document - создаем document")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void createObject() throws Exception {
-        BankDTO bankDTO = new BankDTO();
-        bankDTO.setBik(332);
-        bankDTO.setBankName("Santander");
-        bankDTO.setCountry("Spain");
-        bankDTO.setCity("Malaga");
-        String result = mvc.perform(MockMvcRequestBuilders.post("/banks")
+        DocumentDTO documentDTO = new DocumentDTO();
+        DocumentTypeDTO documentTypeDTO = documentTypeMapper.toDTO(documentTypeRepository.findById(3).get());
+        documentDTO.setDateStart(new Date(System.currentTimeMillis()));
+        documentDTO.setDocumentType(documentTypeDTO);
+        documentDTO.setDocumentStatus(true);
+        documentDTO.setIssueOrganization("Свидетельство о рождении");
+        documentDTO.setIssueCode(112);
+
+        String result = mvc.perform(MockMvcRequestBuilders.post("/documents")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(bankDTO))
+                        .content(asJsonString(documentDTO))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn()
@@ -44,19 +57,23 @@ public class BankControllerTest extends CommonTest {
         log.info(result);
     }
 
+    //не меняет
     @Override
     @Test
     @Order(1)
-    @DisplayName("PUT /banks/{id} - изменяем bank")
+    @Transactional
+    @DisplayName("PUT /documents - изменяем document")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void updateObject() throws Exception {
-        BankDTO bankDTO = bankMapper.toDTO(bankRepository.findById(4).get());
-        int id = bankDTO.getId();
-        String result = mvc.perform(MockMvcRequestBuilders.put("/banks/{id}", id)
+        DocumentDTO documentDTO = documentMapper.toDTO(documentRepository.findById(24).get());
+        documentDTO.setIssueCode(1001);
+        int id = documentDTO.getId();
+        String result = mvc.perform(MockMvcRequestBuilders.put("/documents/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(bankDTO))
+                        .content(asJsonString(documentDTO))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
+                .andDo(print())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -66,11 +83,10 @@ public class BankControllerTest extends CommonTest {
     @Override
     @Test
     @Order(2)
-    @DisplayName("DELETE /banks/{id} - удаляем bank")
+    @DisplayName("DELETE /documents - удаляем document")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void deleteObject() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders
-                        .delete("/banks/{id}", "7")
+        String result = mvc.perform(MockMvcRequestBuilders.delete("/documents/{id}", "7")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -84,10 +100,10 @@ public class BankControllerTest extends CommonTest {
     @Override
     @Test
     @Order(3)
-    @DisplayName("GET /banks - получаем список accounts")
+    @DisplayName("GET /documents - получаем список documents")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void listAll() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders.get("/banks")
+        String result = mvc.perform(MockMvcRequestBuilders.get("/documents")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -101,11 +117,11 @@ public class BankControllerTest extends CommonTest {
     @Override
     @Test
     @Order(4)
-    @DisplayName("GET /banks/{id} - получаем bank по id")
+    @DisplayName("GET /documents/{id} - получаем document по id")
     @WithMockUser(username = "polina@gmail.com", roles = "USER")
     protected void getById() throws Exception {
-        int id = 42;
-        String result = mvc.perform(MockMvcRequestBuilders.get("/banks/{id}", id)
+        int id = 24;
+        String result = mvc.perform(MockMvcRequestBuilders.get("/documents/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())

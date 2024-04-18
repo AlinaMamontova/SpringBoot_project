@@ -23,4 +23,8 @@ public class CardType {
     private int id;
     @Column(name = "type_name", length = 255, nullable = false)
     private String typeName;
+
+    public CardType(String typeName) {
+        this.typeName = typeName;
+    }
 }
